@@ -1,0 +1,2 @@
+Arpfuzzer is a program able to send arbitrary ARP packets using a LUA engine. In other words, using a LUA script executed by the embedded LUA engine you can implement whatever ARP packet configuration or sequence of packets exploiting the LUA basic syntax (conditions, loops, etc). That permits to implent custom pentest logic, fuzzing, well-known ARP based attacks ( flooding, poisoning, etc). Disclaimer: This program is intended to be used on a controlled / legit environment, a careless use can (and will ) create serious malfunctions in network communications.
+

@@ -1,0 +1,258 @@
+.TH ARPFUZZER 1 "AUGUST 2023" Linux "User Manuals"                                  
+.SH NAME                                                                     
+arpfuzzer \- Arpfuzzer is a program able to send arbitrary ARP packets using a LUA engine. In other words, using a LUA script executed by the embedded LUA engine you can implement whatever ARP packet configuration or sequence of packets exploiting the LUA basic syntax (conditions, loops, etc). That permits to implent pentest custom logic, fuzzing, well-known ARP based attacks ( flooding, poisoning, etc). 
+.SH SYNOPSIS                                                                 
+.B  arpfuzzer [-i<iface>] [-f <config_full_path>] [-d level] [-l logfile] [-r repeats]
+ | [-i<iface>] [-f <config_full_path>] [-d level] [-l logfile] [-s script]
+ | [-i<iface>] [-f <config_full_path>] [-d level] [-l logfile] [-p script]
+ | [-h]
+
+arpfuzzer [-i interface] [-f config_path]
+   [-d level]
+   [-h] 
+.SH DESCRIPTION                                                              
+.B arpfuzzer 
+this program permits to send sequences of arbitrary configured ARP packets, permitting to implent pentest custom logic, fuzzing tests, well-known ARP based attacks ( flooding, poisoning, etc). It should be used only in legit and controlled  environment because it could create serious malfunctions in network communications.
+
+The program requires  cap_net_raw=eip, root user is not allowed.
+
+A configuration file using LUA syntax must be provided (all modes: -r, -p or -s) to configure default ARP field values and/or the required packet filters. 
+
+The file contains two major config categories: values and filters.
+
+Values are employed to configure datagram's fields, filters to iimplement a whitelist allowiong only compliant datagrams payload to be shown in the chat conversation panel.
+
+Values are: hdrSenderMAC, hdrTargetMAC, frameType, hardType, protType, hardSize, protSize, opcode, senderMAC, targetMAC, senderIp, targetIp.
+
+Filters are: frameTypeFilter, hardTypeFilter, protTypeFilter, hardSizeFilter, protSizeFilter, opcodeFilter, senderMACFilter, senderIpFilter, targetMACFilter, targetIpFilter.
+
+MAC and IP address are configured as strings, integers as hex values.
+
+In scripting mode ( -s ) it's also required a LUA script implementing da "business logic" aka the criterion followed to create tha packet sequence. To modify the ARP packet fields, LUA is extended with the followiong functions, able to modify the related ARP fields:
+
+  setSrcHdrMAC("string")
+  setDestHdrMAC("string")
+  setFrameType(numeric)
+  setHardType(numeric)
+  setProtType(numeric)
+  setHardSize(numeric)
+  setProtSize(numeric)
+  setOpcode(numeric)
+  setDestMAC("string")
+  setDestIp("string")
+  setSrcMAC("string")
+  setSrcIp("string")
+
+as usual, MAC and IP address are configured as strings, integers as hex values. To send the packets it's also provided the following function (no parameters):
+
+  send(void)
+
+Examples are provided in "CONFIGURATION EXAMPLE" and "SCRIPT EXAMPLE" sections in this man page.
+
+.SH DISCLAIMERS
+
+This program is intended to be used on a controlled / legit environments, a careless use can (and will ) create serious malfunctions in network communications.
+
+.SH OPTIONS                                                       
+
+.IP -i  interface
+Specifies the network interface will be used
+.IP -f  configuration_path 
+Specifies the configuration file path
+.IP -r  repeats 
+Specifies how many identical datagrams must be sent [ 2 or more ]
+.IP -s              
+Shell mode: specifies the script file path
+.IP -p 
+Passive mode: print filtered ARP packets
+.IP -d  level 
+Set debug mode
+.IP -l  logfile
+Set custom log file
+.IP -h
+A short description of arpfuzzer command line syntax.
+
+.SH CONFIGURATION EXAMPLE
+
+--[[ Flag:           hdrSenderMAC
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set value for sender MAC address in header
+     Valid values:   --
+--]]
+hdrSenderMAC = "0xEE:0xA9:0x42:0x5D:0x4C:0xD2"
+
+--[[ Flag:           hdrTargetMAC
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set value for target MAC address in header
+     Valid values:   --
+--]]
+hdrTargetMAC = "0xFF:0xFF:0xFF:0xFF:0xFF:0xFF"
+
+--[[ Flag:           frameType
+     Type:           uint16_t integer 
+     Synopsis:       Set value for frame type
+     Valid values:   --
+--]]
+frameType = 0x806
+
+--[[ Flag:           hardType
+     Type:           uint16_t integer 
+     Synopsis:       Set value for hardware type
+     Valid values:   --
+--]]
+hardType = 0x0
+
+--[[ Flag:           protType
+     Type:           uint16_t integer 
+     Synopsis:       Set value for protocol type
+     Valid values:   --
+--]]
+protType = 0x0
+
+--[[ Flag:           hardSize
+     Type:           uint8_t integer 
+     Synopsis:       Set value for hardware size
+     Valid values:   --
+--]]
+hardSize = 0x6
+
+--[[ Flag:           protSize
+     Type:           uint8_t integer 
+     Synopsis:       Set value for protocol size
+     Valid values:   --
+--]]
+protSize = 0x4
+
+--[[ Flag:           opcode
+     Type:           uint16_t integer 
+     Synopsis:       Set value for opcode
+     Valid values:   --
+--]]
+opcode = 0x1
+
+--[[ Flag:           senderMAC
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set value for sender MAC address
+     Valid values:   --
+--]]
+senderMAC = "0xFF:0xFF:0xFF:0xFF:0xFF:0xFF"
+
+--[[ Flag:           targetMAC
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set value for targer MAC address
+     Valid values:   --
+--]]
+targetMAC = "0xFF:0xFF:0xFF:0xFF:0xFF:0xFF"
+
+--[[ Flag:           senderIp
+     Type:           string reprenenting uint8_t 4 element array 
+     Synopsis:       Set value for sender IP address
+     Valid values:   --
+--]]
+senderIp = "192.168.64.31"
+
+
+--[[ Flag:           targetIp
+     Type:           string reprenenting uint8_t 4 element array 
+     Synopsis:       Set value for targer IP address
+     Valid values:   --
+--]]
+targetIp = "192.168.64.31"
+
+
+
+--[[ Flag:           frameTypeFilter
+     Type:           uint16_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as frame type
+     Valid values:   --
+--]]
+frameTypeFilter = 0x806
+
+--[[ Flag:           hardTypeFilter
+     Type:           uint16_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as hard type
+     Valid values:   --
+--]]
+-- hardTypeFilter = 0x0
+
+--[[ Flag:           protTypeFilter
+     Type:           uint16_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as protocol type
+     Valid values:   --
+--]]
+-- protTypeFilter = 0x0
+
+--[[ Flag:           hardSizeFilter
+     Type:           uint8_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as hard size
+     Valid values:   --
+--]]
+-- hardSizeFilter = 0x0
+
+--[[ Flag:           protSizeFilter
+     Type:           uint8_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as protocol size
+     Valid values:   --
+--]]
+-- protSizeFilter = 0x0
+
+--[[ Flag:           opcodeFilter
+     Type:           uint16_t integer 
+     Synopsis:       Set a filter allowing only packets with this value as opcode
+     Valid values:   --
+--]]
+opcodeFilter = 0x1
+
+--[[ Flag:           senderMACFilter
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set a filter allowing only packets with this value as sender MAC address
+     Valid values:   --
+--]]
+-- senderMACFilter = "0xEE:0xA9:0x42:0x5D:0x4C:0xD2"
+
+--[[ Flag:           senderIpFilter
+     Type:           string reprenenting uint8_t 4 element array 
+     Synopsis:       Set a filter allowing only packets with this value as sender IP address
+     Valid values:   --
+--]]
+senderIpFilter = "192.168.64.31"
+
+
+--[[ Flag:           targetMACFilter
+     Type:           string reprenenting uint8_t 6 element array 
+     Synopsis:       Set a filter allowing only packets with this value as target MAC address
+     Valid values:   --
+--]]
+-- targetMACFilter = "0x0:0x0:0x0:0x0:0x0:0x0"
+
+--[[ Flag:           targetIpFilter
+     Type:           string reprenenting uint8_t 4 element array 
+     Synopsis:       Set a filter allowing only packets with this value as sender IP address
+     Valid values:   --
+--]]
+-- targetIpFilter = "0.0.0.0"
+
+.SH SCRIPT EXAMPLE
+
+--[[ Name:           Test1
+     Synopsis:       Set 'prot type' ARP field to 6, then it will send 16 ARP packets with the MAC address
+                     of the sender in the range '0F:00:11:22:33:44' - 'FF:00:11:22:33:44'
+--]]
+
+setProtType(6)
+
+macChars = { '1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F' }
+macSuffix = "F:00:11:22:33:44"
+
+for idx=1, #macChars do
+    sMac = macChars[idx] .. macSuffix    
+    setSrcMAC(sMac)
+    send()
+end
+
+.SH BUGS                                                                     
+This program is experimental, massive changes are possible.
+.SH AUTHOR                                                                   
+Gabriele Bonacini <gabriele.bonacini@protonmail.com>
+.SH "SEE ALSO"                                                               
+RFC 826 "An Ethernet Address Resolution Protocol", RFC 1122  "Requirements for Internet Hosts -- Communication Layers", RFC 5227 "IPv4 Address Conflict Detection"
