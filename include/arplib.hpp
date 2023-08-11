@@ -3,10 +3,10 @@
 // Copyright (C) 2023  Gabriele Bonacini
 //
 // This program is distributed under dual license:
-// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License 
+// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License
 // for non commercial use, the license has the following terms:
-// * Attribution — You must give appropriate credit, provide a link to the license, 
-// and indicate if changes were made. You may do so in any reasonable manner, 
+// * Attribution — You must give appropriate credit, provide a link to the license,
+// and indicate if changes were made. You may do so in any reasonable manner,
 // but not in any way that suggests the licensor endorses you or your use.
 // * NonCommercial — You must not use the material for commercial purposes.
 // A copy of the license it's available to the following address:
@@ -16,22 +16,22 @@
 
 #pragma once
 
-#include <cstddef>
+#include <time.h>
+
+#include <netinet/ip.h>
+#include <net/if.h>
+#include <linux/if_packet.h>  // struct sockaddr_ll
 
 #include <sys/un.h>
 #include <sys/select.h>
 
-#include <netinet/ip.h>
-#include <net/if.h>
-#include <linux/if_packet.h>  // struct sockaddr_ll 
-
-#include <time.h>
-
+#include <cstddef>
 #include <exception>
 #include <string>
 #include <array>
-#include <vector> 
+#include <vector>
 #include <queue>
+#include <deque>
 #include <map>
 #include <tuple>
 #include <functional>
@@ -48,9 +48,9 @@ namespace arplib{
 
     constexpr size_t  MSG_LEN       {10};
     constexpr uint8_t MAX_ATTEMPTS  {3 };
-   
-    enum PACKET_MAPPING : size_t { IPHDR_DEST_MAC=0, IPHDR_SRC_MAC=6, FRAME_TYPE=12, HARD_TYPE=14, PROT_TYPE=16, 
-                                   HARD_SIZE=18, PROT_SIZE=19, OP_SIZE=20, SENDER_MAC=22, SENDER_IP=28, 
+
+    enum PACKET_MAPPING : size_t { IPHDR_DEST_MAC=0, IPHDR_SRC_MAC=6, FRAME_TYPE=12, HARD_TYPE=14, PROT_TYPE=16,
+                                   HARD_SIZE=18, PROT_SIZE=19, OP_SIZE=20, SENDER_MAC=22, SENDER_IP=28,
                                    DEST_MAC=32, DEST_IP=38 };
 
     enum MSG_DATA_IDXS : size_t { PART_ID_IDX=0, EXPIRING_TIME_IDX=1, ATTEMPTS_IDX=2, MSG_DATA_IDX=3 };
@@ -84,7 +84,7 @@ namespace arplib{
           ArpBuffer                   incoming;
 
         public:
-          ArpsocketBase(const std::string& iface)                      noexcept;
+          explicit ArpsocketBase(const std::string& iface)             noexcept;
           ~ArpsocketBase(void)                                         noexcept;
 
           void     open(void)                                          anyexcept;
@@ -114,7 +114,7 @@ namespace arplib{
           void     getDestMAC(statictypes::MacAddr& dest)      const   noexcept;
           void     getDestIp(std::string& dest)                const   noexcept;
           void     getSrcMAC(statictypes::MacAddr& dest)       const   noexcept;
-          void     getSrcIp(std::string& sIp)                  const   noexcept;
+          void     getSrcIp(std::string& dest)                 const   noexcept;
     };
 
     union FilterValue{
@@ -138,25 +138,25 @@ namespace arplib{
 
            ArpPkt                     lastPacketRecv {};
            FilterMap                  filters;
-           FilterActions              filterActions{ 
+           FilterActions              filterActions{
                   { "frameType",  [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.doublebt == pck.frameType ? false : true;} },
                   { "hardType",   [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.doublebt == pck.hardType ? false : true;} },
                   { "protType",   [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.doublebt == pck.protType ? false : true;} },
                   { "hardSize",   [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.bt == pck.hardSize  ? false : true;} },
                   { "protSize",   [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.bt == pck.protSize ? false : true;} },
                   { "opcode",     [](ArpPkt& pck, FilterValue& ft)-> bool { return ft.doublebt == pck.opcode  ? false : true;} },
-                  { "senderMAC",  [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderMAC); el++) 
+                  { "senderMAC",  [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderMAC); el++)
                                                                             if(ft.btarrMAC.at(el) != pck.senderMAC[el]) return true; return false;} },
-                  { "senderIp",   [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderIp); el++) 
+                  { "senderIp",   [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderIp); el++)
                                                                             if(ft.btarrIp.at(el) != pck.senderIp[el]) return true; return false;} },
-                  { "targetMAC",  [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.targetMAC); el++) 
+                  { "targetMAC",  [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.targetMAC); el++)
                                                                             if(ft.btarrMAC.at(el) != pck.targetMAC[el]) return true; return false;} },
-                  { "targetIp",   [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderIp); el++) 
-                                                                            if(ft.btarrIp.at(el) != pck.senderIp[el]) return true; return false;} } 
+                  { "targetIp",   [](ArpPkt& pck, FilterValue& ft)-> bool { for(size_t el=0; el< sizeof(pck.senderIp); el++)
+                                                                            if(ft.btarrIp.at(el) != pck.senderIp[el]) return true; return false;} }
             };
 
         public:
-           ArpsocketFiltered(const std::string& iface, 
+           ArpsocketFiltered(const std::string& iface,
                              FilterMap&& filt)                          noexcept;
 
            inline bool applyFilters(void)                               anyexcept;
@@ -201,7 +201,7 @@ namespace arplib{
 
         public:
 
-           Arpsocket(const std::string& iface, 
+           Arpsocket(const std::string& iface,
                      FilterMap&& filt)                               noexcept;
            ~Arpsocket(void)                                          noexcept;
 
@@ -227,7 +227,7 @@ namespace arplib{
 
        public:
 
-           ArpsocketScript(const std::string& iface, 
+           ArpsocketScript(const std::string& iface,
                            FilterMap&& filt)                          noexcept;
            ~ArpsocketScript(void)                                     noexcept;
 
@@ -256,10 +256,10 @@ namespace arplib{
 
            ArpPkt   popPacket(void)                                             = delete;
            size_t   availeblePackets(void)                                      = delete;
-      
+
       public:
 
-           ArpsocketReadOnly(const std::string& iface, 
+           ArpsocketReadOnly(const std::string& iface,
                              FilterMap&& filt)                     noexcept;
            ~ArpsocketReadOnly(void)                                noexcept;
 

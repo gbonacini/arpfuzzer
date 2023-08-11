@@ -2,9 +2,9 @@
 // parseCmdLine - a getopt wrapper
 // Copyright (C) 2018  Gabriele Bonacini
 //
-// This program is free software for no profit use, then can redistribute 
-// it and/or modify it under the terms of the GNU General Public License 
-// as published by the Free Software Foundation; either version 2 of 
+// This program is free software for no profit use, then can redistribute
+// it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2 of
 // the License, or (at your option) any later version.
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,9 +36,9 @@ namespace parcmdline {
 
     class ParseCmdLine{
         public:
-            ParseCmdLine(int argc, 
-                         char **argv, 
-                         const char* flags, 
+            ParseCmdLine(int argc,
+                         char **argv,
+                         const char* flags,
                          bool uniq=true)                                              noexcept;
                     bool             isSet(char flag)                           const noexcept;
                     bool             isLegal(char flag)                         const noexcept;
@@ -67,14 +67,14 @@ namespace parcmdline {
                     bool             setOn(char flag)                                 noexcept;
     };
 
-     class ParseCmdLineException final : public std::exception {
+    class ParseCmdLineException final : public std::exception {
         public:
-           ParseCmdLineException(std::string& errString);
-           ParseCmdLineException(std::string&& errString);
+           ParseCmdLineException(const std::string& errString);
+           ParseCmdLineException(const std::string&& errString);
            const char* what(void)                                                const noexcept override;
-           
+
         private:
            std::string errorMessage;
     };
 
-} // End Namespace
+} // End namespace parcmdline

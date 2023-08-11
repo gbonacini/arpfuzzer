@@ -1,11 +1,11 @@
 // -----------------------------------------------------------------
-// sigenmax2870 - a library / tool to configure LTDZ MAX2870 
+// sigenmax2870 - a library / tool to configure LTDZ MAX2870
 //                compatible signal generators.
 // Copyright (C) 2023  Gabriele Bonacini
 //
-// This program is free software for no profit use; you can redistribute 
-// it and/or modify it under the terms of the GNU General Public License 
-// as published by the Free Software Foundation; either version 2 of 
+// This program is free software for no profit use; you can redistribute
+// it and/or modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2 of
 // the License, or (at your option) any later version.
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of

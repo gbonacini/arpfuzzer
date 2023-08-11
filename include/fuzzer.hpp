@@ -3,10 +3,10 @@
 // Copyright (C) 2023  Gabriele Bonacini
 //
 // This program is distributed under dual license:
-// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License 
+// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License
 // for non commercial use, the license has the following terms:
-// * Attribution — You must give appropriate credit, provide a link to the license, 
-// and indicate if changes were made. You may do so in any reasonable manner, 
+// * Attribution — You must give appropriate credit, provide a link to the license,
+// and indicate if changes were made. You may do so in any reasonable manner,
 // but not in any way that suggests the licensor endorses you or your use.
 // * NonCommercial — You must not use the material for commercial purposes.
 // A copy of the license it's available to the following address:
@@ -16,13 +16,13 @@
 
 #pragma once
 
-#include <anyexcept.hpp>
-#include <configFile.hpp>
-#include <arplib.hpp>
-
 #include <exception>
 #include <string>
 #include <array>
+
+#include <anyexcept.hpp>
+#include <configFile.hpp>
+#include <arplib.hpp>
 
 namespace arpfuzzer {
 
@@ -40,8 +40,8 @@ namespace arpfuzzer {
                                                   tMAC  {};
         public:
 
-            ArpFuzzer(const std::string& iface, 
-                      arplib::FilterMap&& filters, 
+            ArpFuzzer(const std::string& iface,
+                      arplib::FilterMap&& filters,
                       configFile::ConfigFile& cfile)                            anyexcept;
             ~ArpFuzzer(void)                                                    noexcept;
 
@@ -49,7 +49,7 @@ namespace arpfuzzer {
             void   sendMessage(void)                                            anyexcept;
             void   shutdown(void)                                               noexcept;
     };
-    
+
     class ArpFuzzerScript {
         private:
             configFile::ConfigScript              configScript;
@@ -63,8 +63,8 @@ namespace arpfuzzer {
                                                   tMAC  {};
         public:
 
-            ArpFuzzerScript(const std::string& iface, 
-                      arplib::FilterMap&& filters, 
+            ArpFuzzerScript(const std::string& iface,
+                      arplib::FilterMap&& filters,
                       configFile::ConfigFile& cfile,
                       const std::string& script)                                anyexcept;
             ~ArpFuzzerScript(void)                                              noexcept;
@@ -77,10 +77,10 @@ namespace arpfuzzer {
         private:
             configFile::ConfigFile&       configFile;
             arplib::ArpsocketReadOnly     arpsocket;
-            
+
         public:
 
-            ArpFuzzerReadOnly(const std::string& iface, 
+            ArpFuzzerReadOnly(const std::string& iface,
                               arplib::FilterMap&& filters,
                               configFile::ConfigFile& cfile)                   anyexcept;
 
@@ -89,7 +89,7 @@ namespace arpfuzzer {
             void   init(void)                                                  anyexcept;
             void   shutdown(void)                                              noexcept;
     };
-           
+
     class ArpFuzzerException final : public std::exception {
         public:
            ArpFuzzerException(std::string& errString);
@@ -99,4 +99,4 @@ namespace arpfuzzer {
            std::string errorMessage;
     };
 
-} // End namespace chatterminal
+} // End namespace arpfuzzer

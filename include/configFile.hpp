@@ -3,10 +3,10 @@
 // Copyright (C) 2023  Gabriele Bonacini
 //
 // This program is distributed under dual license:
-// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License 
+// - Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License
 // for non commercial use, the license has the following terms:
-// * Attribution — You must give appropriate credit, provide a link to the license, 
-// and indicate if changes were made. You may do so in any reasonable manner, 
+// * Attribution — You must give appropriate credit, provide a link to the license,
+// and indicate if changes were made. You may do so in any reasonable manner,
 // but not in any way that suggests the licensor endorses you or your use.
 // * NonCommercial — You must not use the material for commercial purposes.
 // A copy of the license it's available to the following address:
@@ -56,8 +56,8 @@ namespace configFile {
             bool       optional {false};
 
         public:
-            explicit              ConfigVar(std::string&& txt)             noexcept;
-            explicit              ConfigVar(std::string& txt)              noexcept;
+            explicit              ConfigVar(std::string&& txt)              noexcept;
+            explicit              ConfigVar(std::string& txt)               noexcept;
             explicit              ConfigVar(const char* txt)                noexcept;
             explicit              ConfigVar(long num)                       noexcept;
             explicit              ConfigVar(double fl)                      noexcept;
@@ -65,15 +65,15 @@ namespace configFile {
 
             DATA_TYPE             getDataType(void)                   const noexcept;
 
-            const std::string&    getText(void)                       const anyexcept;  
-            void                  getMAC(statictypes::MacAddr& dst)   const anyexcept;  
-            void                  getIp(statictypes::IpAddr& dst)     const anyexcept;  
+            const std::string&    getText(void)                       const anyexcept;
+            void                  getMAC(statictypes::MacAddr& dst)   const anyexcept;
+            void                  getIp(statictypes::IpAddr& dst)     const anyexcept;
             double                getFloat(void)                      const anyexcept;
             long                  getInteger(void)                    const anyexcept;
             bool                  getBool(void)                       const anyexcept;
 
-            void                  setText(const std::string& val)           anyexcept;  
-            void                  setText(const std::string&& val)          anyexcept;  
+            void                  setText(const std::string& val)           anyexcept;
+            void                  setText(const std::string&& val)          anyexcept;
             void                  setFloat(double val)                      anyexcept;
             void                  setInteger(long val)                      anyexcept;
             void                  setBool(bool val)                         anyexcept;
@@ -108,7 +108,7 @@ namespace configFile {
                ~ConfigFile(void)                                         noexcept;
                void     init(void)                                       anyexcept;
                void     cleanConfig(void)                                noexcept;
-               
+
                void     addLoadableVariable(std::string&& name,
                                             std::string dt,
                                             bool optional=false)         anyexcept;
@@ -124,10 +124,10 @@ namespace configFile {
                void     addLoadableVariable(std::string&& name,
                                             bool dt,
                                             bool optional=false)         anyexcept;
-               
+
                void     loadConfig(void)                                 anyexcept;
 
-               const ConfigVar& 
+               const ConfigVar&
                         getConf(const std::string& key)                  anyexcept;
 
                ConfigVar&
@@ -158,14 +158,14 @@ namespace configFile {
     };
 
     class ArpCtx{
-        private:           
+        private:
             static inline arplib::ArpsocketScript* arpsocket  { nullptr };
             static inline ConfigFile*              configFile { nullptr };
 
         public:
             static void  init(arplib::ArpsocketScript* arpsck,
                                      ConfigFile*        cfile)                 noexcept;
-            static  const arplib::ArpsocketScript*  
+            static  const arplib::ArpsocketScript*
                          getArpSckInstance(void)                               noexcept;
             static int   send(lua_State *L)                                    noexcept;
             static int   setSrcHdrMAC(lua_State *L)                            anyexcept;

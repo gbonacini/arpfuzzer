@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Tssh - A ssh test client. 
+// Tssh - A ssh test client.
 // Copyright (C) 2016-2023  Gabriele Bonacini
 //
 // This program is free software; you can redistribute it and/or modify
@@ -17,13 +17,13 @@
 
 #pragma once
 
+#include <sys/types.h>
+#include <stdint.h>
+
 #include <exception>
 #include <limits>
 #include <cstddef>
 #include <string>
-
-#include <sys/types.h>
-#include <stdint.h> 
 
 #include <anyexcept.hpp>
 
@@ -52,26 +52,26 @@ namespace typeutils{
    #pragma GCC diagnostic ignored "-Wtype-limits"
    #endif
 
-   ssize_t safeSsizeT(auto size)  anyexcept{     
+   ssize_t safeSsizeT(auto size)  anyexcept{
       if(size > std::numeric_limits<ssize_t>::max())
          throw TypesUtilsException("Invalid conversion to ssize_t: overflow.");
       return static_cast<ssize_t>(size);
    }
 
-   int safeInt(auto size)  anyexcept{        
+   int safeInt(auto size)  anyexcept{
       if(size > std::numeric_limits<int>::max())
          throw TypesUtilsException("Invalid conversion to int: overflow.");
       return static_cast<int>(size);
    }
 
-   ptrdiff_t safePtrdiff(auto offset)  anyexcept{  
+   ptrdiff_t safePtrdiff(auto offset)  anyexcept{
       if(offset > std::numeric_limits<ptrdiff_t>::max())
          throw TypesUtilsException("Invalid conversion to ptrdiff_t: overflow.");
       return static_cast<ptrdiff_t>(offset);
    }
 
    size_t safeSizeT(auto size)  anyexcept{
-      if(size < 0)       
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to size_t: negative value.");
       if(size > std::numeric_limits<size_t>::max())
          throw TypesUtilsException("Invalid conversion to size_t: overflow.");
@@ -79,7 +79,7 @@ namespace typeutils{
    }
 
    uint8_t safeUint8(auto size)  anyexcept{
-      if(size < 0)       
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to uint8_t: negative value.");
       if(size > std::numeric_limits<uint8_t>::max())
          throw TypesUtilsException("Invalid conversion to uint8_t: overflow.");
@@ -87,31 +87,31 @@ namespace typeutils{
    }
 
    uint16_t safeUint16(auto size)  anyexcept{
-      if(size < 0)       
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to uint16_t: negative value.");
       if(size > std::numeric_limits<uint16_t>::max())
          throw TypesUtilsException("Invalid conversion to uint16_t: overflow.");
       return static_cast<uint16_t>(size);
    }
 
-   unsigned int safeUInt(auto size)  anyexcept{       
-      if(size < 0)       
+   unsigned int safeUInt(auto size)  anyexcept{
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to unsigned int: negative value.");
       if(size > std::numeric_limits<unsigned int>::max())
          throw TypesUtilsException("Invalid conversion to unsigned int: overflow.");
       return static_cast<unsigned int>(size);
    }
 
-   unsigned long safeULong(auto size)  anyexcept{      
-      if(size < 0)       
+   unsigned long safeULong(auto size)  anyexcept{
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to unsigned long: negative value.");
       if(size > std::numeric_limits<unsigned long>::max())
          throw TypesUtilsException("Invalid conversion to unsigned long: overflow.");
       return static_cast<unsigned long>(size);
    }
 
-   uint32_t safeUint32(auto size)  anyexcept{     
-      if(size < 0)       
+   uint32_t safeUint32(auto size)  anyexcept{
+      if(size < 0)
          throw TypesUtilsException("Invalid conversion to uint32_t: negative value.");
       if(size > std::numeric_limits<uint32_t>::max())
          throw TypesUtilsException("Invalid conversion to uint32_t: overflow.");
@@ -121,8 +121,8 @@ namespace typeutils{
    #ifdef __clang__
    #pragma clang diagnostic pop
    #endif
-   
+
    #ifdef __GNUC__
    #pragma GCC diagnostic pop
    #endif
-}
+} // End namespace typeutils
