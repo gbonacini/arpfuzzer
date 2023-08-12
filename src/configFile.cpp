@@ -351,7 +351,7 @@ namespace configFile{
         if(lua_pcall(luaState, 0, 0, 0) != 0)
             throw ConfigFileException("Error: syntax error in config file.");
 
-        bool optionalConf;
+        bool optionalConf {true};
         try{
             for (auto &[key, value] : configEnv){
                 try{

@@ -75,6 +75,7 @@ namespace arplib{
     class ArpsocketBase {
         protected:
           using SockaddrLl=struct sockaddr_ll;
+          using Sockaddr=struct sockaddr;
 
           std::string                 interface      { "" };
           int                         sfd            { -1 };
@@ -169,7 +170,6 @@ namespace arplib{
            using Ifreq=struct ifreq;
            using SockaddrIn=struct sockaddr_in;
            using SockaddrUn=struct sockaddr_un;
-           using Sockaddr=struct sockaddr;
            using MsgId=size_t;
            using PartId=size_t;
            using ExpiringTime=time_t;

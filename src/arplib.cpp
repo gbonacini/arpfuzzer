@@ -316,7 +316,7 @@ namespace arplib{
         static_assert( sizeof(arppkt) <= tuple_size<decltype(etherFrame)>{} );
         memcpy(etherFrame.data(), &arppkt, sizeof(arppkt));
 
-        int bytesSent = sendto(sfd, etherFrame.data(), sizeof(ArpPkt), 0, (struct sockaddr *) &sockaddrll, sizeof (sockaddrll));
+        int bytesSent = sendto(sfd, etherFrame.data(), sizeof(ArpPkt), 0, reinterpret_cast<Sockaddr*>(&sockaddrll), sizeof (sockaddrll));
         if (bytesSent  <= 0){
              string errmsg = mergeStrings({"Error: sendto() : ", strerror(errno)});
              Debug::printLog(errmsg, debugLevel);
@@ -424,12 +424,12 @@ namespace arplib{
     }
 
     int Arpsocket::receive(bool dump)  anyexcept{
-        struct sockaddr_in cliaddr;
+        SockaddrIn cliaddr {};
         socklen_t clilen { sizeof(cliaddr) };
 
         static_assert( sizeof(ArpPkt) <= tuple_size<decltype(incoming)>{} );
         incoming = {};
-        int bytesRecv = recvfrom(sfd, incoming.data(), incoming.size(), 0, (struct sockaddr *)&cliaddr, &clilen);
+        int bytesRecv = recvfrom(sfd, incoming.data(), incoming.size(), 0, reinterpret_cast<Sockaddr*>(&cliaddr), &clilen);
         if(bytesRecv == -1 ) return bytesRecv;
 
         memcpy(&lastPacketRecv, incoming.data(), sizeof(ArpPkt)) ;
@@ -641,7 +641,7 @@ namespace arplib{
         static_assert( sizeof(arppkt) <= tuple_size<decltype(etherFrame)>{} );
         memcpy(etherFrame.data(), &arppkt, sizeof(arppkt));
 
-        int bytesSent = sendto(sfd, etherFrame.data(), sizeof(ArpPkt), 0, (struct sockaddr *) &sockaddrll, sizeof (sockaddrll));
+        int bytesSent = sendto(sfd, etherFrame.data(), sizeof(ArpPkt), 0, reinterpret_cast<Sockaddr *>(&sockaddrll), sizeof (sockaddrll));
         if (bytesSent  <= 0){
              string errmsg = mergeStrings({"Error: sendto() : ", strerror(errno)});
              Debug::printLog(errmsg, debugLevel);
