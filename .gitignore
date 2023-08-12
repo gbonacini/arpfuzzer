@@ -4,7 +4,7 @@
 *swo
 *.o
 *dSYM
-*log
+*.log
 *key
 *gz
 *tar
