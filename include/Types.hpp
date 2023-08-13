@@ -94,6 +94,14 @@ namespace typeutils{
       return static_cast<uint16_t>(size);
    }
 
+   uint32_t safeUint32(auto size)  anyexcept{
+      if(size < 0)
+         throw TypesUtilsException("Invalid conversion to uint32_t: negative value.");
+      if(size > std::numeric_limits<uint32_t>::max())
+         throw TypesUtilsException("Invalid conversion to uint32_t: overflow.");
+      return static_cast<uint32_t>(size);
+   }
+
    unsigned int safeUInt(auto size)  anyexcept{
       if(size < 0)
          throw TypesUtilsException("Invalid conversion to unsigned int: negative value.");
@@ -110,12 +118,10 @@ namespace typeutils{
       return static_cast<unsigned long>(size);
    }
 
-   uint32_t safeUint32(auto size)  anyexcept{
-      if(size < 0)
-         throw TypesUtilsException("Invalid conversion to uint32_t: negative value.");
-      if(size > std::numeric_limits<uint32_t>::max())
-         throw TypesUtilsException("Invalid conversion to uint32_t: overflow.");
-      return static_cast<uint32_t>(size);
+   long safeLong(auto size)  anyexcept{
+         if(size > std::numeric_limits<long>::max())
+            throw TypesUtilsException("Invalid conversion to long: overflow.");
+         return static_cast<long>(size);
    }
 
    #ifdef __clang__

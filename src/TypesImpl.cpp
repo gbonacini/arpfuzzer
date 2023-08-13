@@ -30,15 +30,17 @@
 
 namespace typeutils{
 
+  using std::string;
+
   TypesUtilsException::TypesUtilsException(int errNum) :
                        errorMessage("None"), errorCode(errNum)
   {}
 
-  TypesUtilsException::TypesUtilsException(std::string errString) :
+  TypesUtilsException::TypesUtilsException(string errString) :
                        errorMessage(errString), errorCode(0)
   {}
 
-  TypesUtilsException::TypesUtilsException(int errNum, std::string errString) :
+  TypesUtilsException::TypesUtilsException(int errNum, string errString) :
                        errorMessage(errString), errorCode(errNum)
   {}
 
